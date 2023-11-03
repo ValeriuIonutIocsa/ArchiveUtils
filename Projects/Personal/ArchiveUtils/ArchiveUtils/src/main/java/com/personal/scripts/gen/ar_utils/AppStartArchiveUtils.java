@@ -32,6 +32,12 @@ final class AppStartArchiveUtils {
 
 		} else {
 			String srcPathString = cliArgsByNameMap.get("srcPath");
+			boolean filesOnly = false;
+			if (srcPathString != null && srcPathString.endsWith("*")) {
+
+				srcPathString = srcPathString.substring(0, srcPathString.length() - 1);
+				filesOnly = true;
+			}
 			srcPathString = PathUtils.computeNormalizedPath(null, srcPathString);
 			if (!IoUtils.fileExists(srcPathString)) {
 				Logger.printError("source path is missing, blank, or file does not exist");
@@ -52,10 +58,10 @@ final class AppStartArchiveUtils {
 					final String compressionLevel = cliArgsByNameMap.get("compressionLevel");
 					if (StringUtils.isBlank(password)) {
 						CreateArchiveWorker.work(sevenZipPathString,
-								srcPathString, dstPathString, compressionLevel);
+								srcPathString, dstPathString, compressionLevel, filesOnly);
 					} else {
 						CreatePasswordProtectedArchiveWorker.work(sevenZipPathString,
-								srcPathString, dstPathString, compressionLevel, password);
+								srcPathString, dstPathString, compressionLevel, filesOnly, password);
 					}
 
 				} else if ("extract".equals(mode)) {

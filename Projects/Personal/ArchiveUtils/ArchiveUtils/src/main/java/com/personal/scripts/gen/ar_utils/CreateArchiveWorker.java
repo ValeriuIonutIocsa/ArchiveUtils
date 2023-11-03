@@ -14,17 +14,21 @@ final class CreateArchiveWorker {
 			final String sevenZipPathString,
 			final String srcPathString,
 			final String dstPathString,
-			final String compressionLevel) {
+			final String compressionLevel,
+			final boolean filesOnly) {
 
 		try {
 			Logger.printProgress("creating archive");
+
+			final String processedSrcPathString =
+					ArchiveUtils.createProcessedSrcPathString(srcPathString, filesOnly);
 
 			final List<String> commandPartList = new ArrayList<>();
 			commandPartList.add(sevenZipPathString);
 			commandPartList.add("a");
 			commandPartList.add("-mx=" + compressionLevel);
 			commandPartList.add(dstPathString);
-			commandPartList.add(srcPathString);
+			commandPartList.add(processedSrcPathString);
 
 			ArchiveUtils.printCommand(commandPartList);
 

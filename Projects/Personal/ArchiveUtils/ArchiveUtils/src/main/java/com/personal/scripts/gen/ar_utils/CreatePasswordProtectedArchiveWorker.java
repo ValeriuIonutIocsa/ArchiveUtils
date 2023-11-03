@@ -17,6 +17,7 @@ final class CreatePasswordProtectedArchiveWorker {
 			final String srcPathString,
 			final String dstPathString,
 			final String compressionLevel,
+			final boolean filesOnly,
 			final String password) {
 
 		String tmpPathString = null;
@@ -26,7 +27,7 @@ final class CreatePasswordProtectedArchiveWorker {
 			tmpPathString = PathUtils.computePath(PathUtils.computeParentPath(srcPathString),
 					"_" + PathUtils.computeFileName(dstPathString));
 			createTmpArchive(sevenZipPathString,
-					srcPathString, tmpPathString, compressionLevel);
+					srcPathString, tmpPathString, compressionLevel, filesOnly);
 
 			final List<String> commandPartList = new ArrayList<>();
 			commandPartList.add(sevenZipPathString);
@@ -57,14 +58,18 @@ final class CreatePasswordProtectedArchiveWorker {
 			final String sevenZipPathString,
 			final String srcPathString,
 			final String tmpPathString,
-			final String compressionLevel) throws Exception {
+			final String compressionLevel,
+			final boolean filesOnly) throws Exception {
+
+		final String processedSrcPathString =
+				ArchiveUtils.createProcessedSrcPathString(srcPathString, filesOnly);
 
 		final List<String> commandPartList = new ArrayList<>();
 		commandPartList.add(sevenZipPathString);
 		commandPartList.add("a");
 		commandPartList.add("-mx=" + compressionLevel);
 		commandPartList.add(tmpPathString);
-		commandPartList.add(srcPathString);
+		commandPartList.add(processedSrcPathString);
 
 		ArchiveUtils.printCommand(commandPartList);
 

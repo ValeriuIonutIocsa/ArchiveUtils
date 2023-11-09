@@ -44,6 +44,12 @@ class FolderDeleterImpl implements FolderDeleter {
 
 		boolean success = false;
 		try {
+			if (verboseProgress) {
+
+				Logger.printProgress("deleting folder:");
+				Logger.printLine(folderPathString);
+			}
+
 			final Path folderPath = Paths.get(folderPathString);
 			Files.walkFileTree(folderPath, new SimpleFileVisitor<>() {
 

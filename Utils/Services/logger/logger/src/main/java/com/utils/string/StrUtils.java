@@ -186,6 +186,14 @@ public final class StrUtils {
 	}
 
 	@ApiMethod
+	public static String createAddressInterval(
+			final long startAddress,
+			final long endAddress) {
+
+		return StrUtils.createHexString(startAddress) + " - " + StrUtils.createHexString(endAddress);
+	}
+
+	@ApiMethod
 	public static String createHexString(
 			final long value) {
 
@@ -211,6 +219,40 @@ public final class StrUtils {
 
 		printStream.print("0x");
 		printStream.print(Long.toHexString(value));
+	}
+
+	@ApiMethod
+	public static String createPositiveHexString(
+			final long value) {
+
+		final StringBuilder stringBuilder = new StringBuilder();
+		appendPositiveHexString(value, stringBuilder);
+		return stringBuilder.toString();
+	}
+
+	@ApiMethod
+	public static void appendPositiveHexString(
+			final long value,
+			final StringBuilder stringBuilder) {
+
+		if (value >= 0) {
+
+			stringBuilder
+					.append("0x")
+					.append(Long.toHexString(value));
+		}
+	}
+
+	@ApiMethod
+	public static void printPositiveHexString(
+			final long value,
+			final PrintStream printStream) {
+
+		if (value > 0) {
+
+			printStream.print("0x");
+			printStream.print(Long.toHexString(value));
+		}
 	}
 
 	@ApiMethod
@@ -895,7 +937,7 @@ public final class StrUtils {
 			final String string) {
 
 		final int value;
-		if (StringUtils.startsWith(string, "0x")) {
+		if (StringUtils.startsWithIgnoreCase(string, "0x")) {
 			value = StrUtils.tryParsePositiveIntFromHexString(string);
 		} else {
 			value = StrUtils.tryParsePositiveInt(string);
@@ -958,7 +1000,7 @@ public final class StrUtils {
 			final String string) {
 
 		final long value;
-		if (StringUtils.startsWith(string, "0x")) {
+		if (StringUtils.startsWithIgnoreCase(string, "0x")) {
 			value = StrUtils.tryParsePositiveLongFromHexString(string);
 		} else {
 			value = StrUtils.tryParsePositiveLong(string);
